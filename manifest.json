@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "YouTube Shorts Comment Blocker",
+  "version": "1.0",
+  "description": "Blocks comments on YouTube Shorts from users with usernames matching a pattern like 'randomName-xxx'.",
+  "content_scripts": [
+    {
+      "matches": ["*://www.youtube.com/shorts/*"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ]
+}
