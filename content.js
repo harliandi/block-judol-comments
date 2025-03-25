@@ -1,34 +1,39 @@
-// Regular expression to match usernames in the format "@randomname-xxx"
-// where "randomname" is one or more letters and "xxx" is a combination of letters and numbers.
-const blockedPattern = /^@[A-Za-z]+(?:-[A-Za-z]+)*-[A-Za-z0-9]+$/;
-
-function hideBlockedComments() {
-  // Select comment elements on a Shorts page.
-  // Comments might be rendered as 'ytd-comment-thread-renderer' or 'ytd-comment-renderer'
-  const commentElements = document.querySelectorAll('ytd-comment-thread-renderer, ytd-comment-renderer');
-  
-  for (const comment of commentElements) {
-    // Try to find the username element using common selectors.
-    const authorElement = comment.querySelector('a#author-text span') ||
-                        comment.querySelector('a#author-text') ||
-                        comment.querySelector('#author-text');
-    
-    if (authorElement) {
-      const username = authorElement.textContent.trim();
-      if (blockedPattern.test(username)) {
-        // Hide the comment if the username matches the specified pattern.
-        comment.style.display = 'none';
-      }
+function containsNonAscii(text) {
+  // Check if any character has a char code greater than 127
+  for (let i = 0; i < text.length; i++) {
+    if (text.charCodeAt(i) > 127) {
+      return true;
     }
-  };
+  }
+  return false;
 }
 
-// Run the function on initial page load.
-hideBlockedComments();
+function hideUnicodeComments() {
+  // Select each comment thread renderer
+  const commentThreads = document.querySelectorAll(
+    "ytd-comment-thread-renderer"
+  );
+  console.log(`Found ${commentThreads.length} comment thread(s).`);
+  for (const thread of commentThreads) {
+    // Locate the span element that holds the comment text inside #content-text
+    const commentSpan = thread.querySelector(
+      "yt-attributed-string#content-text"
+    );
+    if (commentSpan) {
+      const text = commentSpan.innerText || "";
+      // If the comment contains non-ASCII Unicode, hide the entire thread
+      if (containsNonAscii(text)) {
+        thread.style.display = "none";
+      }
+    }
+  }
+}
 
-// Use a MutationObserver to hide new comments loaded dynamically.
+// Run the function once to process current comments
+hideUnicodeComments();
+
+// Optional: observe dynamic changes (for instance, if YouTube loads more comments dynamically)
 const observer = new MutationObserver(() => {
-  hideBlockedComments();
+  hideUnicodeComments();
 });
-
 observer.observe(document.body, { childList: true, subtree: true });
