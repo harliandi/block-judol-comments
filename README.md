@@ -1,4 +1,4 @@
-# YouTube Shorts Comment Blocker
+# YouTube Video and Shorts Comment Blocker
 
 This Chrome extension hides comments on YouTube Shorts and Video from users with comment using unicode pattern.
 
