@@ -6,7 +6,6 @@ This Chrome extension hides comments on YouTube Shorts and Video from users with
 
 Targeted Filtering: Hides comments on YouTube Shorts and Video based on a specific comments pattern.
 Dynamic Content Handling: Uses a MutationObserver to monitor and hide new comments loaded dynamically.
-Customizable: Easily modify the regex to match different username formats if needed.
 
 ## Installation
 
